@@ -2,22 +2,23 @@
 
 import React, { useEffect } from "react";
 import { Provider, useDispatch } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
+
 import store from "./store";
 import PageLayout from "../components/templates/PageLayout";
-import ListProductPage from "../components/pages/ListProductPage";
-import { fetchProducts } from "../redux/product/ProductThunk";
+import AppRoutes from "../routes/AppRoutes";
+import { fetchProducts } from "../redux/product/productThunk";
 
 const AppContent: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Fetch all products on first load
     dispatch(fetchProducts());
   }, [dispatch]);
 
   return (
     <PageLayout>
-      <ListProductPage />
+      <AppRoutes />
     </PageLayout>
   );
 };
@@ -25,7 +26,9 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <Provider store={store}>
-      <AppContent />
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
     </Provider>
   );
 };

@@ -33,6 +33,7 @@ export const updateProductAPI = async (
   id: number,
   product: Partial<Product>
 ): Promise<Product> => {
+  console.log(product);
   const response = await axiosInstance.put<Product>(
     `/products/${id}`,
     product

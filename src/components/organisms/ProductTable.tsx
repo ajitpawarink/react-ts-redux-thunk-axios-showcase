@@ -3,6 +3,11 @@
 import React from "react";
 import type { Product } from "../../redux/product/productTypes";
 import Button from "../atoms/Button";
+import {Link} from "react-router-dom";
+
+import { useDispatch } from "react-redux";
+import { type AppDispatch } from "../../app/store";
+import { deleteProduct } from "../../redux/product/productThunk";
 
 interface ProductTableProps {
   products: Product[];
@@ -11,8 +16,21 @@ interface ProductTableProps {
 const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
   if (!products.length) return <div>No products available.</div>;
 
+  const dispatch = useDispatch<AppDispatch>();
+  const handleDelete = (id: number) => {
+    if (!window.confirm("Are you sure you want to delete this product?")) return;
+
+    dispatch(deleteProduct(id));
+  };
+
   return (
-    <table style={{ width: "100%", borderCollapse: "collapse" }}>
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Link to={`/products/create`}>
+          <Button>Add Product</Button>
+        </Link>
+      </div>
+      <table style={{ width: "100%", borderCollapse: "collapse" }}>
       <thead>
         <tr>
           <th>ID</th>
@@ -28,11 +46,13 @@ const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
             <td>{p.id}</td>
             <td>{p.title}</td>
             <td>{p.description}</td>
-            <td>${p.price.toFixed(2)}</td>
+            <td>${p.price}</td>
             <td>
-              <Button onClick={() => alert(`Edit ${p.id}`)}>Edit</Button>
+              <Link to={`/products/${p.id}/edit`}>
+                <Button>Edit</Button>
+              </Link>
               <Button
-                onClick={() => alert(`Delete ${p.id}`)}
+                onClick={() => handleDelete(p.id)}
                 style={{ marginLeft: "8px", backgroundColor: "red" }}
               >
                 Delete
@@ -42,6 +62,8 @@ const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
         ))}
       </tbody>
     </table>
+    </div>
+    
   );
 };
 

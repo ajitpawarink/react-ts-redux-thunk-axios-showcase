@@ -2,7 +2,7 @@
 
 import { createSlice } from "@reduxjs/toolkit";
 import type { ProductState } from "./productTypes";
-import { fetchProducts, fetchProductById } from "./productThunk";
+import { fetchProducts, fetchProductById, createProduct, deleteProduct } from "./productThunk";
 
 const initialState: ProductState = {
   products: [],
@@ -49,6 +49,33 @@ const productSlice = createSlice({
       .addCase(fetchProductById.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload || "Failed to load product";
+      });
+
+      // CREATE PRODUCT
+    builder
+      .addCase(createProduct.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(createProduct.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.products.push(action.payload);
+      })
+      .addCase(createProduct.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload || "Failed to create product";
+      });
+
+    builder
+      .addCase(deleteProduct.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.products = state.products.filter(p => p.id !== action.payload);
+      })
+      .addCase(deleteProduct.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload || "Failed to delete product";
       });
   },
 });
