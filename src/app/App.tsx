@@ -5,6 +5,9 @@ import { Provider, useDispatch } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
 import store, { type AppDispatch } from "./store";
+import { ThemeProvider } from "../context/ThemeContext";
+import "../styles/theme.css";
+
 import PageLayout from "../components/templates/PageLayout";
 import AppRoutes from "../routes/AppRoutes";
 
@@ -30,9 +33,11 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <Provider store={store}>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
+      <ThemeProvider>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </ThemeProvider>
     </Provider>
   );
 };
